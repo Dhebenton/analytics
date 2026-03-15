@@ -18,7 +18,7 @@ app.use(express.json());
 
 app.get('/tracker.js', (_req, res) => {
   res.setHeader('Content-Type', 'application/javascript');
-  res.sendFile(__dirname + '/../tracker/tracker.js');
+  res.sendFile(require('path').resolve(__dirname, '../tracker/tracker.js'));
 });
 
 // Health check
