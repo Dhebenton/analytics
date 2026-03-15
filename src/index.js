@@ -16,6 +16,11 @@ app.use(cors({
 
 app.use(express.json());
 
+app.get('/tracker.js', (_req, res) => {
+  res.setHeader('Content-Type', 'application/javascript');
+  res.sendFile(__dirname + '/../tracker/tracker.js');
+});
+
 // Health check
 app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 
