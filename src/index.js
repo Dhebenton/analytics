@@ -18,6 +18,8 @@ app.use(cors({
 
 app.use(express.json());
 
+app.use(express.text({ type: 'text/plain' }));
+
 app.get('/tracker.js', (_req, res) => {
   res.setHeader('Content-Type', 'application/javascript');
   res.sendFile(require('path').resolve(__dirname, '../tracker/tracker.js'));

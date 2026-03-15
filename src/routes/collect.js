@@ -38,6 +38,16 @@ function parseUtm(url) {
 // POST /collect — receives a pageview or event from the tracker script
 router.post('/', async (req, res) => {
   try {
+    // Handle both application/json and text/plain (sendBeacon sends text/plain)
+    let body = req.body;
+    if (typeof body === 'string') {
+      try {
+        body = JSON.parse(body);
+      } catch {
+        return res.status(400).json({ error: 'Invalid JSON' });
+      }
+    }
+
     const {
       type = 'pageview',
       site_id,
@@ -50,7 +60,7 @@ router.post('/', async (req, res) => {
       is_bounce = 1,
       name,
       properties,
-    } = req.body;
+    } = body;
 
     if (!site_id || !session_id || !visitor_id) {
       return res.status(400).json({ error: 'Missing required fields' });
