@@ -49,22 +49,17 @@
   // --- Send to Backend ---
 
   function send(payload) {
-    var data = JSON.stringify(
-      Object.assign({ site_id: siteId, visitor_id: visitorId, session_id: sessionId }, payload)
-    );
+     var data = JSON.stringify(
+     Object.assign({ site_id: siteId, visitor_id: visitorId, session_id: sessionId }, payload)
+     );
 
-    if (navigator.sendBeacon) {
-      var blob = new Blob([data], { type: 'application/json' });
-      navigator.sendBeacon(endpoint, blob);
-    } else {
-      fetch(endpoint, {
-        method: 'POST',
-        body: data,
-        headers: { 'Content-Type': 'application/json' },
-        keepalive: true,
-      });
-    }
-  }
+     fetch(endpoint, {
+     method: 'POST',
+     body: data,
+     headers: { 'Content-Type': 'application/json' },
+     keepalive: true,
+     });
+     }
 
   function sendPageview(pathname, isBounce, durationMs) {
     send({
