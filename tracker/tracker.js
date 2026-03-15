@@ -1,7 +1,7 @@
 (function () {
   var script = document.currentScript;
   var siteId = script && script.getAttribute('data-site');
-  var endpoint = 'https://your-backend.hypeify.io/collect'; // update to your deployed URL
+  var endpoint = 'https://backend.hypeify.io/collect'; // update to your deployed URL
 
   if (!siteId) {
     console.warn('[Hypeify] Missing data-site attribute');
