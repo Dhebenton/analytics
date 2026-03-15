@@ -8,10 +8,12 @@ const statsRouter = require('./routes/stats');
 const app = express();
 const PORT = process.env.PORT ?? 3000;
 
+app.options('*', cors());
+
 app.use(cors({
   origin: '*',
   methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'text/plain'],
 }));
 
 app.use(express.json());
