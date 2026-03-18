@@ -156,4 +156,63 @@ router.get('/:siteId/timeseries', async (req, res) => {
   }
 });
 
+// GET /stats/:siteId/pages?period=30d
+router.get('/:siteId/pages', async (req, res) => {
+  try {
+    const { siteId } = req.params;
+    const { period = '30d' } = req.query;
+    const days = parseInt(period.replace('d', '')) || 30;
+
+    const query = `
+      SELECT
+        pathname,
+        count() AS value,
+        round(count() / sum(count()) OVER () * 100, 1) AS percentage
+      FROM pageviews
+      WHERE site_id = '${siteId}'
+        AND timestamp >= now() - INTERVAL ${days} DAY
+      GROUP BY pathname
+      ORDER BY value DESC
+      LIMIT 10
+    `;
+
+    const result = await clickhouse.query({ query, format: 'JSONEachRow' });
+    const rows = await result.json();
+    res.json({ data: rows });
+  } catch (err) {
+    console.error('Pages error:', err);
+    res.status(500).json({ error: 'Failed to fetch pages' });
+  }
+});
+
+// GET /stats/:siteId/sources?period=30d
+router.get('/:siteId/sources', async (req, res) => {
+  try {
+    const { siteId } = req.params;
+    const { period = '30d' } = req.query;
+    const days = parseInt(period.replace('d', '')) || 30;
+
+    const query = `
+      SELECT
+        domainWithoutWWW(referrer) AS source,
+        count() AS value,
+        round(count() / sum(count()) OVER () * 100, 1) AS percentage
+      FROM pageviews
+      WHERE site_id = '${siteId}'
+        AND referrer != ''
+        AND timestamp >= now() - INTERVAL ${days} DAY
+      GROUP BY source
+      ORDER BY value DESC
+      LIMIT 10
+    `;
+
+    const result = await clickhouse.query({ query, format: 'JSONEachRow' });
+    const rows = await result.json();
+    res.json({ data: rows });
+  } catch (err) {
+    console.error('Sources error:', err);
+    res.status(500).json({ error: 'Failed to fetch sources' });
+  }
+});
+
 module.exports = router;
