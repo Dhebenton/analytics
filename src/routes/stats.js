@@ -199,7 +199,6 @@ router.get('/:siteId/sources', async (req, res) => {
         round(count() / sum(count()) OVER () * 100, 1) AS percentage
       FROM pageviews
       WHERE site_id = '${siteId}'
-        AND referrer != ''
         AND timestamp >= now() - INTERVAL ${days} DAY
       GROUP BY source
       ORDER BY value DESC
