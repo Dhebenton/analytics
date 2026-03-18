@@ -8,7 +8,7 @@ const clickhouse = createClient({
   database: process.env.CLICKHOUSE_DATABASE ?? 'hypeify',
   clickhouse_settings: {
     async_insert: 1,          
-    wait_for_async_insert: 0,x
+    wait_for_async_insert: 0,
   },
 });
 
